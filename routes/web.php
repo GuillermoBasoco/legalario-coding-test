@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Web\PostController;
+use App\Http\Controllers\Web\AdminController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AdminMiddleware;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PostController::class, 'home'])->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -17,7 +18,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//POSTS
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware(AdminMiddleware::class);
+
+//USER ACTIVITY
+Route::get('/admin/user-activity', [AdminController::class, 'userActivity'])->name('admin.user_activity')->middleware(AdminMiddleware::class);
+
+
 
 require __DIR__.'/auth.php';

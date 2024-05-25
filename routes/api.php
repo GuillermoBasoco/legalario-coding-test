@@ -10,5 +10,6 @@ Route::get('/user', function (Request $request) {
 
 //POSTS
 Route::get('/posts', [PostController::class, 'index']);
+Route::post('/posts', [PostController::class, 'store']);
 
 

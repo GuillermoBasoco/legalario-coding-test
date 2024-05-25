@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    public function home()
+    {
+        $posts = Post::with('user')->get();
+        return view('welcome', compact('posts'));
+    }
+
     public function index()
     {
         $posts = Post::with('user')->get();
@@ -16,6 +23,16 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        return view('posts.show', compact('post'));
+        if (auth()->check()) {
+            return view('posts.show', compact('post'));
+        } else {
+            return view('posts.show_guest', compact('post'));
+        }
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('posts.index')->with('status', 'Post deleted successfully');
     }
 }

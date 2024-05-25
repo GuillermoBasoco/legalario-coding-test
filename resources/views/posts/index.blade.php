@@ -16,6 +16,9 @@
                                 <tr>
                                     <th class="px-4 py-2 border-b-2 border-gray-300 dark:border-gray-600 text-left leading-4 text-gray-800 dark:text-gray-200 tracking-wider">Title</th>
                                     <th class="px-4 py-2 border-b-2 border-gray-300 dark:border-gray-600 text-left leading-4 text-gray-800 dark:text-gray-200 tracking-wider">Author</th>
+                                    @if(auth()->check() && auth()->user()->is_admin)
+                                        <th class="px-4 py-2 border-b-2 border-gray-300 dark:border-gray-600"></th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -23,6 +26,15 @@
                                     <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onclick="window.location='{{ route('posts.show', $post->id) }}'">
                                         <td class="px-4 py-2 border-b border-gray-300 dark:border-gray-600 text-center">{{ $post->title }}</td>
                                         <td class="px-4 py-2 border-b border-gray-300 dark:border-gray-600 text-center">{{ $post->user->name }}</td>
+                                        @if(auth()->check() && auth()->user()->is_admin)
+                                            <td class="px-4 py-2 border-b border-gray-300 dark:border-gray-600 text-center">
+                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 dark:text-red-400">Delete</button>
+                                                </form>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
